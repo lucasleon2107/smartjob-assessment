@@ -131,3 +131,23 @@ sequenceDiagram
         AuthenticationService->>UserController: UserResponse
         UserController-->>Cliente: 201 Created: UserResponse (con token)
     end
+   ```
+
+## Diagrama del flujo del servicio
+```mermaid
+flowchart TD
+    A[Inicio] --> B{Recibir solicitud POST /users}
+    B --> C{Validar email existente}
+    C -->|Email existe| D[Lanzar UserAlreadyExistsException]
+    D --> E[Retornar Error 409: Conflict]
+    C -->|Email no existe| F[Encriptar contraseña]
+    F --> G[Crear nuevo usuario]
+    G --> H[Guardar usuario en BD]
+    H --> I[Autenticar usuario]
+    I --> J[Generar token JWT]
+    J --> K[Actualizar usuario con token y último login]
+    K --> L[Crear UserResponse]
+    L --> M[Retornar 201 Created con UserResponse]
+    E --> N[Fin]
+    M --> N[Fin]
+```
