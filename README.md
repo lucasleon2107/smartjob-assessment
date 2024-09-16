@@ -87,3 +87,47 @@ Donde:
 - Los mensajes de error siguen el formato: `{"message": "mensaje de error"}`.
 - Si el correo ya está registrado en la base de datos, se retornará un error.
 - La contraseña es validada mediante una expresión regular configurable.
+
+
+## Diagrama de secuencia del servicio
+```mermaid
+sequenceDiagram
+    participant Cliente
+    participant UserController
+    participant AuthenticationService
+    participant UserRepository
+    participant PasswordEncoder
+    participant AuthenticationManager
+    participant JwtService
+    participant Base de Datos
+
+    Cliente->>UserController: POST /users (UserRequest)
+    UserController->>AuthenticationService: signUp(userRequest)
+    AuthenticationService->>UserRepository: findByEmail(email)
+    UserRepository->>Base de Datos: SELECT
+    Base de Datos-->>UserRepository: Resultado
+    
+    alt Email ya existe
+        UserRepository-->>AuthenticationService: Usuario encontrado
+        AuthenticationService-->>UserController: Lanza UserAlreadyExistsException
+        UserController-->>Cliente: Error 409: Conflict - Usuario ya existe
+    else Email no existe
+        UserRepository-->>AuthenticationService: Optional.empty()
+        AuthenticationService->>PasswordEncoder: encode(password)
+        PasswordEncoder-->>AuthenticationService: Contraseña encriptada
+        AuthenticationService->>AuthenticationService: createUserFromRequest()
+        AuthenticationService->>UserRepository: save(newUser)
+        UserRepository->>Base de Datos: INSERT
+        Base de Datos-->>UserRepository: Usuario guardado
+        UserRepository-->>AuthenticationService: Usuario creado
+        AuthenticationService->>AuthenticationManager: authenticate()
+        AuthenticationManager-->>AuthenticationService: Autenticación exitosa
+        AuthenticationService->>JwtService: generateToken(savedUser)
+        JwtService-->>AuthenticationService: Token JWT
+        AuthenticationService->>AuthenticationService: updateUserWithTokenAndLastLogin()
+        AuthenticationService->>UserRepository: save(updatedUser)
+        UserRepository->>Base de Datos: UPDATE
+        Base de Datos-->>UserRepository: Usuario actualizado
+        AuthenticationService->>UserController: UserResponse
+        UserController-->>Cliente: 201 Created: UserResponse (con token)
+    end
