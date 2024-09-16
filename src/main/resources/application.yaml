@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: smartjob-assessment
+  datasource:
+    url: jdbc:h2:mem:default
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: none
+  h2:
+    console:
+      enabled: true
+
+jwt:
+  secret: ${JWT_SECRET:25cf3c44c8f39313e8cbf7c23e22fe8b2ee8b288ee5206b0a6397583a1f7f0ef}
+  expiration: ${JWT_EXPIRATION:3600000}
+
+password:
+  regex: ${PASSWORD_REGEX:^[a-zA-Z]*$}
