@@ -34,6 +34,14 @@ Esta aplicación expone una API RESTful para la creación de usuarios. Está des
 
    Esto iniciará la aplicación y la hará accesible en `http://localhost:8080`.
 
+## Documentación de la API
+
+Una vez que el servicio esté en ejecución, puedes acceder a la documentación completa de la API a través de Swagger UI en la siguiente URL:
+
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
 ## Probando el endpoint de registro
 
 Para probar el endpoint de registro de usuarios, puedes usar el siguiente comando cURL:
