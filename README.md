@@ -95,6 +95,7 @@ Donde:
 - Los mensajes de error siguen el formato: `{"message": "mensaje de error"}`.
 - Si el correo ya está registrado en la base de datos, se retornará un error.
 - La contraseña es validada mediante una expresión regular configurable.
+- Puedes configurar la expresión regular de la contraseña mediante la variable de entorno `PASSWORD_REGEX`. Esto te permite personalizar los requisitos de la contraseña según tus necesidades.
 
 
 ## Diagrama de secuencia del servicio
